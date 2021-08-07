@@ -115,6 +115,7 @@ function loadEventListen(){
 
 function buyProduct(event){
     event.preventDefault();
+    document.getElementById('cartnot').style.display="inline-block"
     // console.log(event.target)
     // alert('success')
     if(event.target.classList.contains('add-to-cart')){
