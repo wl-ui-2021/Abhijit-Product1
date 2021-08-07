@@ -49,8 +49,12 @@ function removeProductFromLocal(productId){
 function clearAllProduct(e){
     // alert('success')
     localStorage.clear('products')
-    window.location.reload();
 }
+
+document.getElementById('clear').addEventListener('click',function(){
+    window.location.reload();
+    location.href='./index.html'
+})
 
 function onloaded(){
     // console.log("here")
@@ -75,8 +79,3 @@ function onloaded(){
     })
     shoppingCartContent.innerHTML=output
 }
-
-
-document.getElementById('sucess').addEventListener('click',function(){
-    alert('Your Product Successfully Placed , Happy Shoping!')
-})
