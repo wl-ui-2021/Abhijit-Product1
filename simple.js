@@ -1,8 +1,12 @@
+//Data loaded From Form & Storage
+
 load()
 function load(){
     document.querySelector('#formID').addEventListener('submit',getDataFromForm); 
     document.addEventListener('DOMContentLoaded' , onload);
     loadproData()
+
+    
 }
 
 var productsAdd=[];
@@ -59,73 +63,9 @@ function onload(){
     document.getElementById('pro_card').innerHTML=output;
 }
 
-// ==============================================================
-
-
-
-//selectors
-const products=document.getElementById('productsData')
-const shoppingCartContent=document.getElementById('shopping-cart')
-
-loadEvenetListener();
-function loadEvenetListener(){
-    products.addEventListener('click',buyProduct)
-
-    shoppingCartContent.addEventListener('click',removeProduct)
-
-    document.addEventListener('DOMContentLoaded',onload2)
-}
-
-function buyProduct(e){
-    e.preventDefault();
-    // console.log('success')
-    if(e.target.classList.contains('add-to-cart')){
-        // console.log(e.target.parentElement.parentElement)
-        const product=e.target.parentElement.parentElement;
-        getProductInfo(product);
-    }
-}
-function getProductInfo(product){
-    // console.log("ele",product)
-    const productInfo={
-        title : product.querySelector('h1').textContent,
-        image : product.querySelector('img').src,
-        price : product.querySelector('.price').textContent,
-        id : product.querySelector('button').getAttribute('data-id')
-    }
-    // console.log(productInfo)
-    addIntoCart(productInfo);
-}
-
-function addIntoCart(product){
-    // console.log('pro',product)
-    const row=document.createElement('tr');
-    row.innerHTML=`
-    <td><img src="${product.image}"></td>
-    <td>${product.title}</td>
-    <td>${product.price}></td>
-    <button class="clearitem" data-id="${product.id}"> clear </button>`
-
-    shoppingCartContent.appendChild(row);
-
-    // saveIntoStorage(product);
-}
-
-function removeProduct(e){
-    e.preventDefault();
-    if(e.target.classList.contains('clearitem')){
-        // console.log(e.target.parentElement)
-        e.target.parentElement.remove();
-    }
-}
-
-
-
-function onload2(){
-    
-}
 
 // ===========================================================
+//Data load From XHR request from JSON file.
 
 const productX = document.querySelector('#xhrcard');
 
@@ -135,7 +75,7 @@ function loadproData(){
     xhr.onload=function(){
         if(this.status===200){
             const proDa=JSON.parse(this.response)
-            console.log(proDa)
+            // console.log(proDa)
             // const tr=document.createElement('tr');
             let output1='';
             let count1=8;
@@ -158,4 +98,77 @@ function loadproData(){
         }
     }
     xhr.send();
+}
+
+
+
+// ========================================================
+//Data loaded from HTML
+
+
+loadEventListen();
+function loadEventListen(){
+    document.getElementById('productsData').addEventListener('click' , buyProduct)
+   
+}
+
+
+function buyProduct(event){
+    event.preventDefault();
+    // console.log(event.target)
+    // alert('success')
+    if(event.target.classList.contains('add-to-cart')){
+        // console.log(event.target.parentElement.parentElement)
+        const product = event.target.parentElement.parentElement;
+        getProductInfo(product);
+    }
+}
+
+function getProductInfo(product){
+    // console.log(product )
+    const productInfo = {
+        title : product.querySelector('h2').textContent,
+        image : product.querySelector('img').src,
+        price : product.querySelector('.price').textContent,
+        id : product.querySelector('button').getAttribute('data-id')
+    }
+    // console.log(productInfo)
+    addIntoCart(productInfo);
+}
+
+function addIntoCart(product){
+    // console.log(product)
+    // const row = document.createElement('tr');
+    // row.innerHTML=`
+    // <td><img src="${product.image}"></td>
+    // <td>${product.title}</td>
+    // <td>${product.price}></td>
+    // <button class="clearitem" data-id="${product.id}"> clear </button>
+    // `
+    // shoppingCartContent.appendChild(row); 
+
+    //save to loca storage
+    saveIntoStorage(product);
+}
+
+function saveIntoStorage(productData){
+
+    let products = getProductFromStorage();
+    products.push(productData)
+
+    localStorage.setItem('products',JSON.stringify(products))
+}
+
+function getProductFromStorage(){
+    let products;
+    // products=JSON.parse(localStorage.getItem('products'))
+    console.log('products from storage',products)
+
+    if(localStorage.getItem('products')===null){
+        return products=[]
+    }else{
+        products=JSON.parse(localStorage.getItem('products'))
+    }
+    return products;
+    
 }
